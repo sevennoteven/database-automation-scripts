@@ -81,5 +81,19 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 Write-Host ""
+Write-Host "TEST 5: Sample Data Check" -ForegroundColor Yellow
+
+$employeeTableCount = "SELECT COUNT(*) FROM $database.employees;"
+$tableCountResult = mysql --defaults-file=$tempConfigPath -e $employeeTableCount -N -s 2>&1
+
+if ($LASTEXITCODE -eq 0) {
+    $tcountResult = $tableCountResult.Trim()
+    Write-Host "  Employee records: $tcountResult" -ForegroundColor White
+    Write-Host "[PASS] Data retrieved" -ForegroundColor Green
+} else {
+    Write-Host "[FAIL] Could not get database version" -ForegroundColor Red
+}
+
+Write-Host ""
 Remove-Item $tempConfigPath -Force
 Write-Host "=== Health Check Complete ===" -ForegroundColor Green
