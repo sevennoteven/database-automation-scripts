@@ -12,6 +12,7 @@ $user = "your_mysql_username" #change to your username
 $password  = "your_mysql_password" #change to your password
 
 Write-Host "===MySQL Database Health Check===" -ForegroundColor Green
+Write-Host ""
 Write-Host "Server: $server" -ForegroundColor Cyan
 Write-Host "Database: $database" -ForegroundColor Cyan
 Write-Host ""
@@ -21,6 +22,7 @@ $tempConfig = @"
 user=$user
 password=$password
 host=$server
+database=$database
 "@
 
 $tempConfigPath = "$env:TEMP\my_temp.cnf"
@@ -60,7 +62,7 @@ $countResult = mysql --defaults-file=$tempConfigPath -e $countTable -N -s 2>&1
 
 if ($LASTEXITCODE -eq 0) {
     $tableCount = $countResult.Trim()
-    Write-Host "  Count: $tableCount" -ForegroundColor White
+    Write-Host "  Tables: $tableCount" -ForegroundColor White
     Write-Host "[PASS] Table count retrieved" -ForegroundColor Green
 } else {
     Write-Host "[FAIL] Could not get table count" -ForegroundColor Red
@@ -77,13 +79,13 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "  Version: $version" -ForegroundColor White
     Write-Host "[PASS] Version retrieved" -ForegroundColor Green
 } else {
-    Write-Host "[FAIL] Could not get database version" -ForegroundColor Red
+    Write-Host "[FAIL] Could not retrieve data" -ForegroundColor Red
 }
 
 Write-Host ""
 Write-Host "TEST 5: Sample Data Check" -ForegroundColor Yellow
 
-$employeeTableCount = "SELECT COUNT(*) FROM $database.employees;"
+$employeeTableCount = "SELECT COUNT(*) FROM employees;"
 $tableCountResult = mysql --defaults-file=$tempConfigPath -e $employeeTableCount -N -s 2>&1
 
 if ($LASTEXITCODE -eq 0) {
@@ -91,7 +93,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "  Employee records: $tcountResult" -ForegroundColor White
     Write-Host "[PASS] Data retrieved" -ForegroundColor Green
 } else {
-    Write-Host "[FAIL] Could not get database version" -ForegroundColor Red
+    Write-Host "[FAIL] Could not retrieve data" -ForegroundColor Red
 }
 
 Write-Host ""
