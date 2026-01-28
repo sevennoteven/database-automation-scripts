@@ -67,5 +67,19 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 Write-Host ""
+Write-Host "TEST 4: MySQL Version" -ForegroundColor Yellow
+
+$versionCheck = "SELECT VERSION();"
+$versionCheckResult = mysql --defaults-file=$tempConfigPath -e $versionCheck -N -s 2>&1
+
+if ($LASTEXITCODE -eq 0) {
+    $version = $versionCheckResult.Trim()
+    Write-Host "  Version: $version" -ForegroundColor White
+    Write-Host "[PASS] Version retrieved" -ForegroundColor Green
+} else {
+    Write-Host "[FAIL] Could not get database version" -ForegroundColor Red
+}
+
+Write-Host ""
 Remove-Item $tempConfigPath -Force
 Write-Host "=== Health Check Complete ===" -ForegroundColor Green
