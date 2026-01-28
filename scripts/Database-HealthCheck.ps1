@@ -51,6 +51,21 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "[FAIL] Could not get database size" -ForegroundColor Red
 }
 
+
+Write-Host ""
+Write-Host "TEST 3: Table Count" -ForegroundColor Yellow
+
+$countTable = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '$database';"
+$countResult = mysql --defaults-file=$tempConfigPath -e $countTable -N -s 2>&1
+
+if ($LASTEXITCODE -eq 0) {
+    $tableCount = $countResult.Trim()
+    Write-Host "  Count: $tableCount" -ForegroundColor White
+    Write-Host "[PASS] Table count retrieved" -ForegroundColor Green
+} else {
+    Write-Host "[FAIL] Could not get table count" -ForegroundColor Red
+}
+
 Write-Host ""
 Remove-Item $tempConfigPath -Force
 Write-Host "=== Health Check Complete ===" -ForegroundColor Green
