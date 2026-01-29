@@ -10,11 +10,13 @@ $server = "localhost"
 $database = "your_database_name" #change to your database name
 $user = "your_mysql_username" #change to your username
 $password  = "your_mysql_password" #change to your password
+$startTime = Get-Date
 
 Write-Host "===MySQL Database Health Check===" -ForegroundColor Green
 Write-Host ""
 Write-Host "Server: $server" -ForegroundColor Cyan
 Write-Host "Database: $database" -ForegroundColor Cyan
+Write-Host "Started: $($startTime.ToString('yyyy-MM-dd HH:mm:ss'))" -ForegroundColor Cyan
 Write-Host ""
 
 $tempConfig = @"
@@ -98,4 +100,8 @@ if ($LASTEXITCODE -eq 0) {
 
 Write-Host ""
 Remove-Item $tempConfigPath -Force
+$endTime = Get-Date
+$elapsed = $endTime - $startTime
+Write-Host "Finished: $($endTime.ToString('yyyy-MM-dd HH:mm:ss'))" -ForegroundColor Cyan
+Write-Host "Duration: $($elapsed.TotalSeconds) seconds" -ForegroundColor Cyan
 Write-Host "=== Health Check Complete ===" -ForegroundColor Green
