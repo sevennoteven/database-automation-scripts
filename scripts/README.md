@@ -4,11 +4,15 @@
 Automates daily health checks for MySQL databases. Runs multiple validation tests and provides formatted output without requiring manual server access or database inspection.
 
 ## Features
-- Connection testing
+- Connection testing with automatic exit on failure
 - Database size monitoring
-- Table count
+- Table count validation
 - MySQL version check
 - Sample data validation
+- Execution timestamps and duration tracking
+- Test summary with pass/fail statistics
+- Detailed error messages for troubleshooting
+```
 
 ## Requirements
 - PowerShell 5.1 or higher
@@ -35,6 +39,7 @@ Automates daily health checks for MySQL databases. Runs multiple validation test
 
 Server: localhost
 Database: dba_practioce
+Started: 2026-01-29 15:22:36
 
 TEST 1: Connection Test
 [PASS] Successfully connected
@@ -56,6 +61,14 @@ TEST 5: Sample Data Check
   Employee records: 5
 [PASS] Data retrieved
 
+==== SUMMARY ====
+Total Tests: 5
+Passed: 5
+Failed: 0
+Pass Rate: 100%
+
+Finished: 2026-01-29 15:22:37
+Duration: 0.2104224 seconds
 === Health Check Complete ===
 ```
 
@@ -64,3 +77,8 @@ TEST 5: Sample Data Check
 - The script assumes the MySQL command-line client is in your system PATH
 - If you get "mysql: command not found", add MySQL bin folder to your PATH or run from MySQL bin directory
 - For security, never commit real passwords to version control - use environment variables or prompt for password in production
+
+## Error Handling
+- If the connection test (TEST 1) fails, the script will display the MySQL error message and exit immediately
+- For other tests, failures will display error details but the script will continue running
+- All errors are displayed in red for easy identification
