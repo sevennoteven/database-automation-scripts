@@ -4,6 +4,7 @@
 Automates daily health checks for MySQL databases. Runs multiple validation tests and provides formatted output without requiring manual server access or database inspection.
 
 ## Features
+```
 - Connection testing with automatic exit on failure
 - Database size monitoring
 - Table count validation
@@ -15,11 +16,14 @@ Automates daily health checks for MySQL databases. Runs multiple validation test
 ```
 
 ## Requirements
+```
 - PowerShell 5.1 or higher
 - MySQL Server 5.7 or higher
 - MySQL command-line client installed
+```
 
 ## Setup
+```
 1. Clone or download this repository
 2. Open `Database-HealthCheck.ps1` in a text editor
 3. Update the connection parameters (lines 10-12):
@@ -27,9 +31,11 @@ Automates daily health checks for MySQL databases. Runs multiple validation test
    - `$user` - Your MySQL username  
    - `$password` - Your MySQL password
 4. Save the file
+```
 
 ## Usage
-```powershell
+```
+powershell
 .\scripts\Database-HealthCheck.ps1
 ```
 
