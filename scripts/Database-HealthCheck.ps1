@@ -42,7 +42,9 @@ if ($LASTEXITCODE -eq 0) {
     $passedTests++
 } else {
     Write-Host "[FAIL] Could not connect" -ForegroundColor Red
+    Write-Host "Error: $result" -ForegroundColor Red
     $failedTests++
+    exit
 }
 
 $totalTests++
@@ -61,6 +63,7 @@ if ($LASTEXITCODE -eq 0) {
     $passedTests++
 } else {
     Write-Host "[FAIL] Could not get database size" -ForegroundColor Red
+    Write-Host "Error: $result" -ForegroundColor Red
     $failedTests++
 }
 
@@ -80,6 +83,7 @@ if ($LASTEXITCODE -eq 0) {
     $passedTests++
 } else {
     Write-Host "[FAIL] Could not get table count" -ForegroundColor Red
+    Write-Host "Error: $result" -ForegroundColor Red
     $failedTests++
 }
 
@@ -98,6 +102,7 @@ if ($LASTEXITCODE -eq 0) {
     $passedTests++
 } else {
     Write-Host "[FAIL] Could not retrieve data" -ForegroundColor Red
+    Write-Host "Error: $result" -ForegroundColor Red
     $failedTests++
 }
 
@@ -116,6 +121,7 @@ if ($LASTEXITCODE -eq 0) {
     $passedTests++
 } else {
     Write-Host "[FAIL] Could not retrieve data" -ForegroundColor Red
+    Write-Host "Error: $result" -ForegroundColor Red
     $failedTests++
 }
 
