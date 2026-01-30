@@ -1,17 +1,25 @@
-# MySQL Database Health Check Script
+# MySQL Database & Server Health Check Script
 
 ## Purpose
-Automates daily health checks for MySQL databases. Runs multiple validation tests and provides formatted output without requiring manual server access or database inspection.
+Automates daily health checks for MySQL databases and Windows server performance. Runs multiple validation tests and provides formatted output without requiring manual server access or database inspection.
 
 ## Features
 ```
+**Database Checks:**
 - Connection testing with automatic exit on failure
 - Database size monitoring
 - Table count validation
 - MySQL version check
 - Sample data validation
+
+**Server Performance Checks:**
+- CPU usage monitoring
+- Memory utilization tracking
+- Disk space monitoring (C: drive)
+
+**Reporting:**
 - Execution timestamps and duration tracking
-- Test summary with pass/fail statistics
+- Test summary with pass/fail statistics and pass rate percentage
 - Detailed error messages for troubleshooting
 ```
 
@@ -41,11 +49,11 @@ powershell
 
 ## Example Output
 ```
-===MySQL Database Health Check===
+===MySQL Database & Server Health Check===
 
 Server: localhost
 Database: dba_practioce
-Started: 2026-01-29 15:22:36
+Started: 2026-01-30 13:49:45
 
 TEST 1: Connection Test
 [PASS] Successfully connected
@@ -67,14 +75,26 @@ TEST 5: Sample Data Check
   Employee records: 5
 [PASS] Data retrieved
 
+TEST 6: CPU Usage
+  CPU: 3.37%
+[PASS] CPU usage retrieved
+
+TEST 7: Memory Usage
+  Memory: 29.26%
+[PASS] Memory usage retrieved
+
+TEST 8: Disk Usage
+  Disk: 37.38%
+[PASS] Disk usage retrieved
+
 ==== SUMMARY ====
-Total Tests: 5
-Passed: 5
+Total Tests: 8
+Passed: 8
 Failed: 0
 Pass Rate: 100%
 
-Finished: 2026-01-29 15:22:37
-Duration: 0.2104224 seconds
+Finished: 2026-01-30 13:49:46
+Duration: 1.3576656 seconds
 === Health Check Complete ===
 ```
 
@@ -88,3 +108,9 @@ Duration: 0.2104224 seconds
 - If the connection test (TEST 1) fails, the script will display the MySQL error message and exit immediately
 - For other tests, failures will display error details but the script will continue running
 - All errors are displayed in red for easy identification
+
+## Thresholds & Warnings
+Currently all checks are informational. Future versions may include:
+- Warning when disk space exceeds 80%
+- Alert when CPU sustained above 90%
+- Memory usage notifications
