@@ -1,6 +1,6 @@
-# Database Health Check Script for MySQL
+# MySQL Database & Server Health Check Script
 # Author: Jay
-# Date: January 28, 2026
+# Date: January 28, 2026 (Updated: January 30, 2026)
 #
 # SETUP: Replace the connection parameters below with your actual MySQL credentials
 # DO NOT commit real passwords to version control!
@@ -15,7 +15,7 @@ $totalTests = 0
 $passedTests = 0
 $failedTests = 0
 
-Write-Host "===MySQL Database Health Check===" -ForegroundColor Green
+Write-Host "===MySQL Database & Server Health Check===" -ForegroundColor Green
 Write-Host ""
 Write-Host "Server: $server" -ForegroundColor Cyan
 Write-Host "Database: $database" -ForegroundColor Cyan
@@ -122,6 +122,76 @@ if ($LASTEXITCODE -eq 0) {
 } else {
     Write-Host "[FAIL] Could not retrieve data" -ForegroundColor Red
     Write-Host "Error: $result" -ForegroundColor Red
+    $failedTests++
+}
+
+$totalTests++
+
+Write-Host ""
+Write-Host "TEST 6: CPU Usage" -ForegroundColor Yellow
+
+try {
+    $cpuUsage = (Get-Counter '\Processor(_Total)\% Processor Time').CounterSamples.CookedValue
+    $cpuPercent = [math]::Round($cpuUsage, 2)
+    
+    
+    Write-Host "  CPU: $cpuPercent%" -ForegroundColor White
+    Write-Host "[PASS] CPU usage retrieved" -ForegroundColor Green
+    $passedTests++
+    
+} catch {
+    
+    Write-Host "[FAIL] Could not get CPU usage" -ForegroundColor Red
+    Write-Host "Error: $_" -ForegroundColor Red
+    $failedTests++
+}
+
+$totalTests++
+
+Write-Host ""
+Write-Host "TEST 7: Memory Usage" -ForegroundColor Yellow
+
+try {
+    $os = Get-CimInstance Win32_OperatingSystem
+    $totalRAM = $os.TotalVisibleMemorySize
+    $freeRAM = $os.FreePhysicalMemory
+    $usedRAM = $totalRAM - $freeRAM
+    $memoryPercent = [math]::Round(($usedRAM / $totalRAM) * 100, 2)
+    
+    
+    
+    Write-Host "  Memory: $memoryPercent%" -ForegroundColor White
+    Write-Host "[PASS] Memory usage retrieved" -ForegroundColor Green
+    $passedTests++
+    
+} catch {
+    
+    Write-Host "[FAIL] Could not get Memory usage" -ForegroundColor Red
+    Write-Host "Error: $_" -ForegroundColor Red
+    $failedTests++
+}
+
+$totalTests++
+
+Write-Host ""
+Write-Host "TEST 8: Disk Usage" -ForegroundColor Yellow
+
+try {
+    $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"
+    $usedSpace = $disk.Size - $disk.FreeSpace
+    $diskPercent = [math]::Round(($usedSpace / $disk.Size) * 100, 2)
+    
+    
+    
+    
+    Write-Host "  Disk: $diskPercent%" -ForegroundColor White
+    Write-Host "[PASS] Disk usage retrieved" -ForegroundColor Green
+    $passedTests++
+    
+} catch {
+    
+    Write-Host "[FAIL] Could not get Disk usage" -ForegroundColor Red
+    Write-Host "Error: $_" -ForegroundColor Red
     $failedTests++
 }
 
