@@ -11,6 +11,9 @@ Automates daily health checks for MySQL databases and Windows server performance
 - Table count validation
 - MySQL version check
 - Sample data validation
+- Long running query detection (> 5 minutes)
+- Blocking session monitoring
+- Stale connection detection (> 6 hours)
 
 **Server Performance Checks:**
 - CPU usage monitoring
@@ -53,7 +56,7 @@ powershell
 
 Server: localhost
 Database: dba_practioce
-Started: 2026-01-30 13:49:45
+Started: 2026-02-02 10:01:51
 
 TEST 1: Connection Test
 [PASS] Successfully connected
@@ -76,25 +79,37 @@ TEST 5: Sample Data Check
 [PASS] Data retrieved
 
 TEST 6: CPU Usage
-  CPU: 3.37%
+  CPU: 2.65%
 [PASS] CPU usage retrieved
 
 TEST 7: Memory Usage
-  Memory: 29.26%
+  Memory: 26.17%
 [PASS] Memory usage retrieved
 
 TEST 8: Disk Usage
-  Disk: 37.38%
+  Disk: 37.85%
 [PASS] Disk usage retrieved
 
+TEST 9: Long Running Queries Check
+  Long Running Queries: 0
+[PASS] No long running queries detected
+
+TEST 10: Blocking Session Check
+  Blocking Session: 0
+[PASS] No Blocking Session detected
+
+TEST 11: Connection Over 6 Hrs Check
+  Connection Over 6 Hours: 0
+[PASS] No Connection Over 6 Hours detected
+
 ==== SUMMARY ====
-Total Tests: 8
-Passed: 8
+Total Tests: 11
+Passed: 11
 Failed: 0
 Pass Rate: 100%
 
-Finished: 2026-01-30 13:49:46
-Duration: 1.3576656 seconds
+Finished: 2026-02-02 10:01:53
+Duration: 1.4404189 seconds
 === Health Check Complete ===
 ```
 
