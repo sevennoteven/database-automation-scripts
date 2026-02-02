@@ -197,6 +197,90 @@ try {
 
 $totalTests++
 
+
+Write-Host ""
+Write-Host "TEST 9: Long Running Queries Check" -ForegroundColor Yellow
+
+try {
+    $longQueryCheck = "SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE Command != 'Sleep' AND Time > 300;"
+    $longQueryResult = mysql --defaults-file=$tempConfigPath -e $longQueryCheck -N -s 2>&1
+    
+    $longQueryCount = [int]$longQueryResult.Trim()
+    
+    Write-Host "  Long Running Queries: $longQueryCount" -ForegroundColor White
+    
+    if ($longQueryCount -eq 0) {
+        Write-Host "[PASS] No long running queries detected" -ForegroundColor Green
+        $passedTests++
+    } else {
+        Write-Host "[WARNING] $longQueryCount long running queries found" -ForegroundColor Yellow
+        $passedTests++  # Still count as passed, just a warning
+    }
+    
+} catch {
+    Write-Host "[FAIL] Could not check long running queries" -ForegroundColor Red
+    Write-Host "Error: $_" -ForegroundColor Red
+    $failedTests++
+}
+
+$totalTests++
+
+
+Write-Host ""
+Write-Host "TEST 10: Blocking Session Check" -ForegroundColor Yellow
+
+try {
+    $blockingQueryCheck = "SELECT COUNT(*) FROM information_schema.innodb_lock_waits;"
+    $blockingQueryResult = mysql --defaults-file=$tempConfigPath -e $blockingQueryCheck -N -s 2>&1
+    
+    $blockingQueryCount = [int]$blockingQueryResult.Trim()
+    
+    Write-Host "  Blocking Session: $blockingQueryCount" -ForegroundColor White
+    
+    if ($blockingQueryCount -eq 0) {
+        Write-Host "[PASS] No Blocking Session detected" -ForegroundColor Green
+        $passedTests++
+    } else {
+        Write-Host "[WARNING] $blockingQueryCount Blocking Session found" -ForegroundColor Yellow
+        $passedTests++  # Still count as passed, just a warning
+    }
+    
+} catch {
+    Write-Host "[FAIL] Could not check Blocking Session" -ForegroundColor Red
+    Write-Host "Error: $_" -ForegroundColor Red
+    $failedTests++
+}
+
+$totalTests++
+
+
+Write-Host ""
+Write-Host "TEST 11: Connection Over 6 Hrs Check" -ForegroundColor Yellow
+
+try {
+    $ConnectionQueryCheck = "SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE Time > 21600;"
+    $ConnectionQueryResult = mysql --defaults-file=$tempConfigPath -e $ConnectionQueryCheck -N -s 2>&1
+    
+    $ConnectionQueryCount = [int]$ConnectionQueryResult.Trim()
+    
+    Write-Host "  Connection Over 6 Hours: $ConnectionQueryCount" -ForegroundColor White
+    
+    if ($blockingQueryCount -eq 0) {
+        Write-Host "[PASS] No Connection Over 6 Hours detected" -ForegroundColor Green
+        $passedTests++
+    } else {
+        Write-Host "[WARNING] $blockingQueryCount Connection Over 6 Hours found" -ForegroundColor Yellow
+        $passedTests++  # Still count as passed, just a warning
+    }
+    
+} catch {
+    Write-Host "[FAIL] Could not check Connection Over 6 Hours" -ForegroundColor Red
+    Write-Host "Error: $_" -ForegroundColor Red
+    $failedTests++
+}
+
+$totalTests++
+
 Write-Host ""
 Remove-Item $tempConfigPath -Force
 $endTime = Get-Date
