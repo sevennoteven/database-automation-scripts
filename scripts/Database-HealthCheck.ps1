@@ -57,8 +57,7 @@ $sizeResult = mysql --defaults-file=$tempConfigPath -e $sizeQuery -N -s 2>&1
 
 if ($LASTEXITCODE -eq 0) {
     $sizeMB = $sizeResult.Trim()
-    Write-Host "  Database: $database" -ForegroundColor White
-    Write-Host "  Size: $sizeMB MB" -ForegroundColor White
+    Write-Host "  Database Size: $sizeMB MB" -ForegroundColor White
     Write-Host "[PASS] Database size retrieved" -ForegroundColor Green
     $passedTests++
 } else {
@@ -78,7 +77,7 @@ $countResult = mysql --defaults-file=$tempConfigPath -e $countTable -N -s 2>&1
 
 if ($LASTEXITCODE -eq 0) {
     $tableCount = $countResult.Trim()
-    Write-Host "  Tables: $tableCount" -ForegroundColor White
+    Write-Host "  Table Count: $tableCount" -ForegroundColor White
     Write-Host "[PASS] Table count retrieved" -ForegroundColor Green
     $passedTests++
 } else {
@@ -214,7 +213,7 @@ try {
         $passedTests++
     } else {
         Write-Host "[WARNING] $longQueryCount long running queries found" -ForegroundColor Yellow
-        $passedTests++  # Still count as passed, just a warning
+        $passedTests++
     }
     
 } catch {
@@ -242,7 +241,7 @@ try {
         $passedTests++
     } else {
         Write-Host "[WARNING] $blockingQueryCount Blocking Session found" -ForegroundColor Yellow
-        $passedTests++  # Still count as passed, just a warning
+        $passedTests++
     }
     
 } catch {
@@ -258,19 +257,19 @@ Write-Host ""
 Write-Host "TEST 11: Connection Over 6 Hrs Check" -ForegroundColor Yellow
 
 try {
-    $ConnectionQueryCheck = "SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE Time > 21600;"
-    $ConnectionQueryResult = mysql --defaults-file=$tempConfigPath -e $ConnectionQueryCheck -N -s 2>&1
+    $connectionQueryCheck = "SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE Time > 21600;"
+    $connectionQueryResult = mysql --defaults-file=$tempConfigPath -e $connectionQueryCheck -N -s 2>&1
     
-    $ConnectionQueryCount = [int]$ConnectionQueryResult.Trim()
+    $connectionQueryCount = [int]$connectionQueryResult.Trim()
     
-    Write-Host "  Connection Over 6 Hours: $ConnectionQueryCount" -ForegroundColor White
+    Write-Host "  Connection Over 6 Hours: $connectionQueryCount" -ForegroundColor White
     
-    if ($blockingQueryCount -eq 0) {
+    if ($connectionQueryCount -eq 0) {
         Write-Host "[PASS] No Connection Over 6 Hours detected" -ForegroundColor Green
         $passedTests++
     } else {
-        Write-Host "[WARNING] $blockingQueryCount Connection Over 6 Hours found" -ForegroundColor Yellow
-        $passedTests++  # Still count as passed, just a warning
+        Write-Host "[WARNING] $connectionCount Connection Over 6 Hours found" -ForegroundColor Yellow
+        $passedTests++
     }
     
 } catch {
