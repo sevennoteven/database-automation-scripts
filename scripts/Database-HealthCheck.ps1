@@ -268,7 +268,7 @@ try {
         Write-Host "[PASS] No Connection Over 6 Hours detected" -ForegroundColor Green
         $passedTests++
     } else {
-        Write-Host "[WARNING] $connectionCount Connection Over 6 Hours found" -ForegroundColor Yellow
+        Write-Host "[WARNING] $connectionQueryCount Connection Over 6 Hours found" -ForegroundColor Yellow
         $passedTests++
     }
     
@@ -276,6 +276,35 @@ try {
     Write-Host "[FAIL] Could not check Connection Over 6 Hours" -ForegroundColor Red
     Write-Host "Error: $_" -ForegroundColor Red
     $failedTests++
+}
+
+$totalTests++
+
+Write-Host ""
+Write-Host "TEST 12: Backup Status Check" -ForegroundColor Yellow
+
+try {
+    $backupQuery = "SELECT backup_type, backup_status, TIMESTAMPDIFF(HOUR, backup_end_time, NOW()) AS hours_ago FROM backup_log WHERE backup_status = 'Complete' ORDER BY backup_end_time DESC LIMIT 1;"
+    
+    $backupResult = mysql --defaults-file=$tempConfigPath -e $backupQuery -N -s 2>&1
+    $parts = "$backupResult" -split '\s+'
+    
+    $hoursAgo = [int]$parts[2]
+
+
+    if ($hoursAgo -le 24) {
+        Write-Host "  Last Backup: $($parts[0]) ($hoursAgo hours ago)" -ForegroundColor White
+        Write-Host "[PASS] Backup is recent (within 24 hours)" -ForegroundColor Green
+        $passedTests++
+    } else {
+        Write-Host "  Last Backup: $($parts[0]) ($hoursAgo hours ago)" -ForegroundColor White
+        Write-Host "[WARNING] Backup is older than 24 hours" -ForegroundColor Yellow
+        $passedTests++
+    }
+    
+} catch {
+    Write-Host "[FAIL] Could not check backup" -ForegroundColor Red
+    Write-Host "Error: $_" -ForegroundColor Red
 }
 
 $totalTests++
