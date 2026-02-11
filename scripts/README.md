@@ -14,6 +14,7 @@ Automates daily health checks for MySQL databases and Windows server performance
 - Long running query detection (> 5 minutes)
 - Blocking session monitoring
 - Stale connection detection (> 6 hours)
+- Backup status monitoring (validates backups within 24 hours)
 
 **Server Performance Checks:**
 - CPU usage monitoring
